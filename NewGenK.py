@@ -3,12 +3,13 @@ import numpy as np
 # Simulate Damage
 # Number of defected Regions
 
-def get_K(n, k0, combination, damage_bin, dof=8):
+def get_K(n, k0, combination, damage_bins, dof=8):
     k = k0*np.ones(dof)
     damaged_k_indices = combination
     damaged_k = []
+    count=0
     for i in damaged_k_indices:
-        _bin = damage_bin
+        _bin = damage_bins[count]
         damage = 1 - np.round(np.random.uniform(_bin[0], _bin[1]), decimals=3)
         damaged_k.append({
             'index': i,
@@ -17,6 +18,7 @@ def get_K(n, k0, combination, damage_bin, dof=8):
             'damage_bin': _bin,
         })
         k[i] = damage*k[i] 
+        count = count+1
 
     K = np.zeros((dof, dof))
     for i in range(dof - 1):
@@ -34,4 +36,4 @@ def get_K(n, k0, combination, damage_bin, dof=8):
     }
 
 if __name__ == "__main__":
-    print(get_K(2, 1e9, [1], [0.5, 1])['K'])
+    print(get_K(2, 1e9, [1,2], [[0.5,1],[0.5, 1]])['k'])
